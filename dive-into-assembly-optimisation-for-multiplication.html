@@ -1,0 +1,320 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="index, follow" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,700;1,400&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="./theme/stylesheet/style.min.css">
+
+    <link id="dark-theme-style" rel="stylesheet" type="text/css"
+          media="(prefers-color-scheme: dark)"
+    href="./theme/stylesheet/dark-theme.min.css">
+
+    <link id="pygments-dark-theme" rel="stylesheet" type="text/css"
+              media="(prefers-color-scheme: dark)"
+          href="./theme/pygments/monokai.min.css">
+    <link id="pygments-light-theme" rel="stylesheet" type="text/css"
+              media="(prefers-color-scheme: light), (prefers-color-scheme: no-preference)"
+          href="./theme/pygments/github.min.css">
+
+
+
+  <link rel="stylesheet" type="text/css" href="./theme/font-awesome/css/fontawesome.css">
+  <link rel="stylesheet" type="text/css" href="./theme/font-awesome/css/brands.css">
+  <link rel="stylesheet" type="text/css" href="./theme/font-awesome/css/solid.css">
+
+
+
+  <!-- Chrome, Firefox OS and Opera -->
+  <meta name="theme-color" content="#fff">
+  <!-- Windows Phone -->
+  <meta name="msapplication-navbutton-color" content="#fff">
+  <!-- iOS Safari -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <!-- Microsoft EDGE -->
+  <meta name="msapplication-TileColor" content="#fff">
+
+  <link href="https://RoshanStacker.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Stacking Roshan Blog Atom">
+
+
+
+
+
+
+
+
+ 
+
+<meta name="author" content="roshanstacker" />
+<meta name="description" content="This is a bit of research into how multiplying a variable and a constant integer is compiled into assembly x86 instructions. We will look at how the instruction set changes as the constant integer changes. Setup and Scripts We start with a mulk.c file which contains a function that …" />
+<meta name="keywords" content="Assembly, Hardware">
+
+
+  <meta property="og:site_name" content="Stacking Roshan Blog"/>
+  <meta property="og:title" content="Dive into Assembly Optimisation for Multiplication"/>
+  <meta property="og:description" content="This is a bit of research into how multiplying a variable and a constant integer is compiled into assembly x86 instructions. We will look at how the instruction set changes as the constant integer changes. Setup and Scripts We start with a mulk.c file which contains a function that …"/>
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:url" content="./dive-into-assembly-optimisation-for-multiplication.html"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2021-10-16 05:56:00+11:00"/>
+  <meta property="article:modified_time" content=""/>
+  <meta property="article:author" content="./author/roshanstacker.html">
+  <meta property="article:section" content="Post"/>
+  <meta property="article:tag" content="Assembly"/>
+  <meta property="article:tag" content="Hardware"/>
+  <meta property="og:image" content="">
+
+  <title>Stacking Roshan Blog &ndash; Dive into Assembly Optimisation for Multiplication</title>
+
+
+</head>
+<body >
+
+<aside>
+  <div>
+    <a href="./">
+      <img src="./theme/img/profile.png" alt="Conor Atkins" title="Conor Atkins">
+    </a>
+
+    <h1>
+      <a href="./">Conor Atkins</a>
+    </h1>
+
+    <p>Hacker and Automation Engineer</p>
+
+
+
+    <ul class="social">
+      <li>
+        <a class="sc-github"
+           href="https://github.com/RoshanStacker"
+           target="_blank">
+          <i class="fa-brands fa-github"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+</aside>
+  <main>
+
+<nav>
+  <a href="./">Home</a>
+
+
+  <a href="https://RoshanStacker.github.io/feeds/all.atom.xml">Atom</a>
+
+</nav>
+
+<article class="single">
+  <header>
+      
+    <h1 id="dive-into-assembly-optimisation-for-multiplication">Dive into Assembly Optimisation for Multiplication</h1>
+    <p>
+      Posted on Sat 16 October 2021 in <a href="./category/post.html">Post</a>
+
+    </p>
+  </header>
+
+
+  <div>
+    <p>This is a bit of research into how multiplying a variable and a constant integer is compiled into assembly x86 instructions. We will look at how the instruction set changes as the constant integer changes.</p>
+<h2>Setup and Scripts</h2>
+<p>We start with a mulk.c file which contains a function that takes a parameter, and returns the parameter multiplied by a constant. This constant can be chosen at compile time using a make file. We can then script a loop to run this make file for a range of values.</p>
+<p>Here are the scripts:</p>
+<p><strong>mulk.c</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kt">long</span><span class="w"> </span><span class="nf">mulk</span><span class="p">(</span><span class="kt">long</span><span class="w"> </span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">K</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p><strong>Makefile</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c"># Set up a default value for K.</span>
+<span class="c"># To use other values, run make with</span>
+<span class="c"># # the preferred value of K.</span>
+<span class="c"># make k=5</span>
+<span class="c"># make k=7</span>
+<span class="c"># etc.</span>
+<span class="nv">k</span><span class="o">?=</span><span class="m">32</span>
+<span class="c"># Allow the user to type K=5 or k=5</span>
+<span class="nv">K</span><span class="o">?=</span><span class="k">$(</span>k<span class="k">)</span>
+
+<span class="nf">all</span><span class="o">:</span>
+<span class="w">        </span>@gcc<span class="w"> </span>-O1<span class="w"> </span>-S<span class="w"> </span>-DK<span class="o">=</span><span class="k">$(</span>K<span class="k">)</span><span class="w"> </span>mulk.c<span class="w"> </span>-o<span class="w"> </span>mulk<span class="k">$(</span>k<span class="k">)</span>.s
+<span class="w">        </span>@cat<span class="w"> </span>mulk<span class="k">$(</span>k<span class="k">)</span>.s
+</code></pre></div>
+
+<p>This make file simply compiles the code into assembly, then outputs the assembly code.</p>
+<h2>Notes on Assembly</h2>
+<p>For the following snippets of Assembly, I will include on the processing for multiplication. Remember that in Assembly, the %rdi register holds the first parameter passed to the function, which will be <code>a</code> from the C code. Also the %rax register holds the return value, which will be the result of the multiplication. Using this make file, I can type the command <code>make k=1</code> to compile with the constant integer 1, and I can replace 1 with any other integer.</p>
+<h2>Multiplying by Small Integers</h2>
+<div class="highlight"><pre><span></span><code><span class="c1">// For k=1</span>
+
+<span class="n">movq</span><span class="w">    </span>%<span class="n">rdi</span><span class="p">,</span><span class="w"> </span>%<span class="n">rax</span>
+</code></pre></div>
+
+<p>Since multiplying by 1 returns the input value, this can be done by moving the input value to the output plain and simple.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// For k=2</span>
+
+<span class="n">leaq</span><span class="w">    </span><span class="p">(</span>%<span class="n">rdi</span><span class="p">,</span>%<span class="n">rdi</span><span class="p">),</span><span class="w"> </span>%<span class="n">rax</span>
+</code></pre></div>
+
+<p>What <code>leaq</code> does is evaluate a simple arithmetic expression which contains up to 4 values and denoted by brackets <code>()</code> in the form <code>Displacement ( Base, Index, Scale)</code>. This expression equates to <code>= D + B + ( I * S )</code>. <code>leaq</code> specifically then moves the result to the second parameter register which is <code>%rax</code> in this case. This is contrasted by the <code>movq</code> command which evaluates the expression, then goes to that address in memory and moves the value located there to the second register. The simple arithmetic expression is normally used for array indexing, but also works as a short hand for simple arithmetic while being fast in hardware.</p>
+<p>Evaluating this <code>leaq</code> gives <code>%rax = %rdi + %rdi</code> or <code>%rdi * 2</code>`.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// For k=3</span>
+
+<span class="n">leaq</span><span class="w">    </span><span class="p">(</span>%<span class="n">rdi</span><span class="p">,</span>%<span class="n">rdi</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span><span class="w"> </span>%<span class="n">rax</span>
+</code></pre></div>
+
+<p>Another <code>leaq</code>. This one evaluates to <code>%rax = %rdi + (%rdi * 2)</code>. An interesting question here is comparing <code>leaq</code> with <code>addq</code>, because here we have introduced a multiply by 2, and a point of this post is about how multiple is slow and can be optimised, so why do we have <code>leaq</code> multiplying. It is possible that <code>leaq</code> actually adds <code>%rdi</code> twice to compute <code>(%rdi * 2)</code> to avoid multiplying. You may think that this would be the same as using <code>addq</code> 2 times, but it is actually different. Because <code>leaq</code> is for calculating addresses, it is actually done in the decode phase in some modern CPUs thanks to superscalar processors. This is out of the scope for this blog post, but the point is that <code>leaq</code> is very fast in hardware.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// For k=4</span>
+
+<span class="n">leaq</span><span class="w">    </span><span class="mi">0</span><span class="p">(,</span>%<span class="n">rdi</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span><span class="w"> </span>%<span class="n">rax</span>
+</code></pre></div>
+
+<p>Another <code>leaq</code> which evaluates to <code>0 + 0 + (%rdi * 4)</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// For k=5</span>
+
+<span class="n">leaq</span><span class="w">    </span><span class="p">(</span>%<span class="n">rdi</span><span class="p">,</span>%<span class="n">rdi</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span><span class="w"> </span>%<span class="n">rax</span>
+</code></pre></div>
+
+<p>5 uses <code>leaq</code> as well but only multiplies by 4 and then adds itself to get <code>*5</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// For k=6</span>
+
+<span class="n">leaq</span><span class="w">    </span><span class="p">(</span>%<span class="n">rdi</span><span class="p">,</span>%<span class="n">rdi</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span><span class="w"> </span>%<span class="n">rax</span>
+<span class="n">addq</span><span class="w">    </span>%<span class="n">rax</span><span class="p">,</span><span class="w"> </span>%<span class="n">rax</span>
+</code></pre></div>
+
+<p>This is the first expression to use more than one command. We see the <code>leaq</code> used for multiplying by 3, and then this result is added to itself to double this, make it <code>3 * 2 = 6</code>. If we look into why it has done this instead of using <code>leaq 0(,%rdi,6)</code>, we can make the guess that using <code>leaq</code> to multiply by 6 could take 6 steps, and using <code>leaq</code> to multiply by 2 and add 1 would take a total of 3 steps. Then adding this result to itself is a further 1 step for a total of 4 steps, which is less than 6 steps.</p>
+<h2>Hypothesis</h2>
+<p>It seems that first, the compiler favours <code>leaq</code> very highly. This is backed up by modern CPU hardware optimising <code>leaq</code> instructions, and these instructions taking place during decoding which can make their processing cost appear 'free'. Second, it seems that <code>leaq</code> using large numbers to multiply increase the number of steps to compute it, leading to the process seen in <code>k=6</code> where <code>leaq</code> is used to compute half of the multiplication, and then adding the result with it self to double it completes the multiplication by 6.</p>
+<p>We are doing multiplication here, yet while there is a specific one line command in assembly for multiplication known as <code>imul</code> (integer multiply), we haven't seen it. With a basic understanding of binary arithmetic, it makes sense that adding two binary numbers together is fast. Simple half adders and full adders can be creating using a few logic gates per bit, and the process of adding is very close to XORing two registers. While multiplication of two registers is harder because there is no simple way to do it.</p>
+<p>My hypothesis as to why the compiler is not using <code>imul</code> is because it costs more time or clock cycles in the CPU hardware, and using addition, shifts and <code>lea</code> would be faster. Therefore we can assign a cost value to each command where <code>imul</code> is a high cost and <code>addq</code>, <code>leaq</code>, <code>sarq</code> and <code>salq</code> have low costs. If we the total number of these commands and compare it with the values for <code>k</code> which the compiler starts to use <code>imul</code>, we can evaluate the ratio of the costs of these commands.</p>
+<p><strong>Note:</strong> <code>salq</code> and <code>sarq</code> (shift arithmetic left/right) are used to bitshift registers. This can multiply by powers of 2 similarly to how adding a zero to the end of a decimal number will multiply it by 10.</p>
+<h2>Testing with Larger Integers</h2>
+<p>I created a bash script that would compile with values of <code>k</code> from 1 to 80. It prints out the number of times each command appears in the assembly code for each value of <code>k</code>.</p>
+<div class="highlight"><pre><span></span><code>!/bin/bash
+
+<span class="k">for</span><span class="w"> </span>number<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="o">{</span><span class="m">1</span>..80<span class="o">}</span>
+<span class="k">do</span>
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="o">===================</span><span class="nv">$number</span>
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="nv">MUL</span><span class="w"> </span><span class="o">=</span>
+<span class="w">        </span>make<span class="w"> </span><span class="nv">k</span><span class="o">=</span><span class="nv">$number</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span>imul
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="se">\n</span>lea<span class="w"> </span><span class="o">=</span>
+<span class="w">        </span>make<span class="w"> </span><span class="nv">k</span><span class="o">=</span><span class="nv">$number</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span>lea
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="se">\n</span>add<span class="w"> </span><span class="o">=</span>
+<span class="w">        </span>make<span class="w"> </span><span class="nv">k</span><span class="o">=</span><span class="nv">$number</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span>add
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="se">\n</span>sub<span class="w"> </span><span class="o">=</span>
+<span class="w">        </span>make<span class="w"> </span><span class="nv">k</span><span class="o">=</span><span class="nv">$number</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span>sub
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="se">\n</span>sal<span class="w"> </span><span class="o">=</span>
+<span class="w">        </span>make<span class="w"> </span><span class="nv">k</span><span class="o">=</span><span class="nv">$number</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span>sal
+<span class="k">done</span>
+</code></pre></div>
+
+<p>This reveals that the first time <code>imul</code> is used is for <code>k=46</code></p>
+<div class="highlight"><pre><span></span><code><span class="c1">// For k=46</span>
+
+<span class="n">imulq</span><span class="w">   </span><span class="no">$</span><span class="mi">46</span><span class="p">,</span><span class="w"> </span>%<span class="n">rdi</span><span class="p">,</span><span class="w"> </span>%<span class="n">rax</span>
+</code></pre></div>
+
+<p>Using the results for all values between 1 and 80, I calculated the maximum number of commands used. <strong>I found the maximum was 3 commands</strong>. So I investigated the code for values that are one command away from 46, which would be <code>46/2</code>, since <code>addq</code> can be used to quickly double a register.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// For k=23</span>
+
+<span class="n">leaq</span><span class="w">    </span><span class="p">(</span>%<span class="n">rdi</span><span class="p">,</span>%<span class="n">rdi</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span><span class="w"> </span>%<span class="n">rax</span>
+<span class="n">salq</span><span class="w">    </span><span class="no">$</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span>%<span class="n">rax</span>
+<span class="n">subq</span><span class="w">    </span>%<span class="n">rdi</span><span class="p">,</span><span class="w"> </span>%<span class="n">rax</span>
+</code></pre></div>
+
+<p>Assembly for <code>k=23</code> uses 3 commands, meaning appending an <code>addq %rax, %rax</code> would use a total of 4 commands.</p>
+<p>Based on this finding, I believe the compiler is trying to use up to 3 of these simple commands to optimise the multiplication, and using <code>imul</code> when the minimum number of these simple command is greater than 3.</p>
+<h2>Explaining this Behaviour</h2>
+<p>So based on our assumption that the compiler is assigning costs to these commands, where <code>addq</code>, <code>leaq</code>, <code>sarq</code> and <code>salq</code> could have costs of <code>1</code>, then <code>imul</code> would have a cost of between <code>3-4</code> as this is where the compiler chooses to use <code>imul</code> instead of <code>4</code> simple commands. I started to research the hardware costs of these commands.</p>
+<p>In old CPUs that are simple, this cost would come in the number of clock cycles it takes to evaluate these commands. In modern CPUs, calculating the number of clock cycles probably won't work as modern CPUs would have parallel processing and other optimisations that allow out-of-order processing.</p>
+<p>I found a document assigning costs to assembly commands written by <strong>Agner Fog. from the Technical University of Denmark</strong>. Found at this link: https://www.agner.org/optimize/instruction_tables.pdf</p>
+<p>For an old CPU like the Intel Pentium, this document shows the clock cycles for each command.</p>
+<figure class="wp-block-image size-large is-resized">
+<img src="https://stackingroshan.wordpress.com/wp-content/uploads/2021/10/image.png?w=481" class="wp-image-200" style="width:467px;height:81px" />
+</figure>
+
+<p>This shows that <code>mov</code> takes 1 clock cycle. It also specifies that <code>add</code>, <code>sub</code> and <code>lea</code> take 1 cycle. It does not include <code>sal</code> or <code>sar</code>. For <code>imul</code> it states 11 clock cycles, making <code>imul</code> cost 11 times as much as the other simple instructions</p>
+<figure class="wp-block-image size-large">
+<img src="https://stackingroshan.wordpress.com/wp-content/uploads/2021/10/image-1.png?w=480" class="wp-image-202" />
+</figure>
+
+<p>This supports the idea that <code>imul</code> costs more than the simple expression resulting in the compiler using multiple simple expressions before using <code>imul</code>. However, the size of this extra cost is much more than we predict, being <code>11*</code> instead of <code>3-4*</code> greater. To work around this, we need to look at tables for modern CPUs which are conveniently provided in this document.</p>
+<p>For a modern CPU, I looked at Intel's 10th gen IceLake CPU released in 2019. Because of complex CPU optimisations to support out-of-order computation, the instructions are not measured in <em>clock cycles</em> but instead measured in <em>latency</em>. Latency here refers to time in core clock cycles making it effectively the same as measuring <em>clock cycles</em>, while accounting for speed improvements due to parallel processing and other optimisations. This is because it measure how long the CPU must wait for the result of the calculation before it can return it, the same idea as <em>clock cycles</em> in the Pentium</p>
+<figure class="wp-block-image size-large">
+<img src="https://stackingroshan.wordpress.com/wp-content/uploads/2021/10/image-2.png?w=635" class="wp-image-204" /><br />
+
+<figcaption>IceLake <code>mov</code> costs</figcaption>
+</figure>
+
+<figure class="wp-block-image size-large">
+<img src="https://stackingroshan.wordpress.com/wp-content/uploads/2021/10/image-4.png?w=642" class="wp-image-207" /><br />
+
+<figcaption>IceLake <code>lea</code> costs</figcaption>
+</figure>
+
+<p>This shows that <code>mov</code>, <code>lea</code>, <code>add</code>, <code>sub</code>, <code>sar</code> and <code>sal</code> all cost around 1 in terms of latency. Compare this is the forms of <code>imul</code>.</p>
+<figure class="wp-block-image size-large">
+<img src="https://stackingroshan.wordpress.com/wp-content/uploads/2021/10/image-5.png?w=572" class="wp-image-209" /><br />
+
+<figcaption>IceLake <code>imul</code> costs</figcaption>
+</figure>
+
+<p>All the forms of <code>imul</code> cost 3-4 in terms of latency. This supports the measurement of the compiler valuing <code>imul</code> as 3-4 times slower than the other simple commands.</p>
+<h2>Conclusion and Findings</h2>
+<p>Look at the assembly code created by the compiler, it chooses to use up to 3 simple commands of <code>mov</code>, <code>lea</code>, <code>add</code>, <code>sub</code>, <code>sar</code> and <code>sal</code>. If more than 3 of these commands are required, the compiler will instead use <code>imul</code>. Researching the speed at which a modern CPU will process these commands shows that <code>imul</code> does in fact cost 3-4 times as much as the simple commands. It is interesting to not that for an old CPU like the Pentium, this cost was 11 times as much, and modern CPU hardware has reduced this down to only 3-4. We can also explain this as the cost of the simple commands in terms of time (<em>latency</em>) or <em>clock cycles</em> have stayed at a value of 1 cycle, while it is <code>imul</code> which has become cheaper to compute. This points to the simple commands being limited to 1 cycle as this is the fastest anything can run, while innovations such as parallelism and out-of-order calculation has made <code>imul</code> more efficient.</p>
+  </div>
+  <div class="tag-cloud">
+    <p>
+      <a href="./tag/assembly.html">Assembly</a>
+      <a href="./tag/hardware.html">Hardware</a>
+    </p>
+  </div>
+
+
+
+
+
+
+</article>
+
+<footer>
+<p>
+  &copy; 2025  - This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nd/4.0/deed.en_US" target="_blank">Creative Commons Attribution-NoDerivatives</a>
+</p>
+<p>
+Built with <a href="http://getpelican.com" target="_blank">Pelican</a> using <a href="http://bit.ly/flex-pelican" target="_blank">Flex</a> theme
+</p><p>
+  <a rel="license"
+     href="http://creativecommons.org/licenses/by-nd/4.0/"
+     target="_blank">
+    <img alt="Creative Commons License"
+         title="Creative Commons License"
+         style="border-width:0"
+           src="https://i.creativecommons.org/l/by-nd/4.0/80x15.png"
+         width="80"
+         height="15"/>
+  </a>
+</p></footer>  </main>
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " Stacking Roshan Blog ",
+  "url" : ".",
+  "image": "",
+  "description": "My Computer Science Blog"
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,203 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="index, follow" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,700;1,400&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="./theme/stylesheet/style.min.css">
+
+    <link id="dark-theme-style" rel="stylesheet" type="text/css"
+          media="(prefers-color-scheme: dark)"
+    href="./theme/stylesheet/dark-theme.min.css">
+
+    <link id="pygments-dark-theme" rel="stylesheet" type="text/css"
+              media="(prefers-color-scheme: dark)"
+          href="./theme/pygments/monokai.min.css">
+    <link id="pygments-light-theme" rel="stylesheet" type="text/css"
+              media="(prefers-color-scheme: light), (prefers-color-scheme: no-preference)"
+          href="./theme/pygments/github.min.css">
+
+
+
+  <link rel="stylesheet" type="text/css" href="./theme/font-awesome/css/fontawesome.css">
+  <link rel="stylesheet" type="text/css" href="./theme/font-awesome/css/brands.css">
+  <link rel="stylesheet" type="text/css" href="./theme/font-awesome/css/solid.css">
+
+
+
+  <!-- Chrome, Firefox OS and Opera -->
+  <meta name="theme-color" content="#fff">
+  <!-- Windows Phone -->
+  <meta name="msapplication-navbutton-color" content="#fff">
+  <!-- iOS Safari -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <!-- Microsoft EDGE -->
+  <meta name="msapplication-TileColor" content="#fff">
+
+  <link href="https://RoshanStacker.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Stacking Roshan Blog Atom">
+
+
+
+
+
+
+
+
+ 
+
+<meta name="author" content="roshanstacker" />
+<meta name="description" content="Why Machine Learning can be Effective at Reading the Brain Machine learning has the unique capability to recognise patterns and structures. With this, machine learning has been extremely effective in image &amp; video processing to detect patterns and structures, such as objects or people&#39;s faces. As machine learning is developed from …" />
+<meta name="keywords" content="BCI, CNN, Machine Learning, neuroscience">
+
+
+  <meta property="og:site_name" content="Stacking Roshan Blog"/>
+  <meta property="og:title" content="Machine Learning CNN to Interpret Brain Signals"/>
+  <meta property="og:description" content="Why Machine Learning can be Effective at Reading the Brain Machine learning has the unique capability to recognise patterns and structures. With this, machine learning has been extremely effective in image &amp; video processing to detect patterns and structures, such as objects or people&#39;s faces. As machine learning is developed from …"/>
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:url" content="./machine-learning-cnn-to-interpret-brain-signals.html"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2020-05-03 10:14:00+10:00"/>
+  <meta property="article:modified_time" content=""/>
+  <meta property="article:author" content="./author/roshanstacker.html">
+  <meta property="article:section" content="Post"/>
+  <meta property="article:tag" content="BCI"/>
+  <meta property="article:tag" content="CNN"/>
+  <meta property="article:tag" content="Machine Learning"/>
+  <meta property="article:tag" content="neuroscience"/>
+  <meta property="og:image" content="">
+
+  <title>Stacking Roshan Blog &ndash; Machine Learning CNN to Interpret Brain Signals</title>
+
+
+</head>
+<body >
+
+<aside>
+  <div>
+    <a href="./">
+      <img src="./theme/img/profile.png" alt="Conor Atkins" title="Conor Atkins">
+    </a>
+
+    <h1>
+      <a href="./">Conor Atkins</a>
+    </h1>
+
+    <p>Hacker and Automation Engineer</p>
+
+
+
+    <ul class="social">
+      <li>
+        <a class="sc-github"
+           href="https://github.com/RoshanStacker"
+           target="_blank">
+          <i class="fa-brands fa-github"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+</aside>
+  <main>
+
+<nav>
+  <a href="./">Home</a>
+
+
+  <a href="https://RoshanStacker.github.io/feeds/all.atom.xml">Atom</a>
+
+</nav>
+
+<article class="single">
+  <header>
+      
+    <h1 id="machine-learning-cnn-to-interpret-brain-signals">Machine Learning CNN to Interpret Brain Signals</h1>
+    <p>
+      Posted on Sun 03 May 2020 in <a href="./category/post.html">Post</a>
+
+    </p>
+  </header>
+
+
+  <div>
+    <h2>Why Machine Learning can be Effective at Reading the Brain</h2>
+<p>Machine learning has the unique capability to recognise patterns and structures. With this, machine learning has been extremely effective in image &amp; video processing to detect patterns and structures, such as objects or people's faces. As machine learning is developed from large data sets, it is possible to control the dataset which is used in the learning. The large amount of data required can be a downside for some applications, and can have unexpected negative effects (such as racial biases), but for application in reading brain signals, there are large volumes of data, and the algorithm can learn on an individual person's brain to become more effective at identifying patterns unique to that individual.</p>
+<p>In the paper that is referenced, they have used machine learning to interpret electro-encephalographic (EEG) and magneto-encephalographic (MEG) which are comprised of several hundred sensors around the head to measure activity in regions of the brain and changes over time. The measurements made are multidimensional and are made at a frequency that is less than a millisecond, which creates the large amounts of data that can be used in machine learning. Due to the high-dimensional nature and general complexity of the data, machine learning is a perfect tool to interpret the information, and is more favourable compared to a hard coded algorithm. One new challenge in the application of machine learning in this area is the very low signal to noise ration (SNR). This is because there is a lot of signals measured in the brain that are not related to thought or sensors. This includes blood pumping through the brain and other unconscious actions such as cardiac and background vision. This low SNR poses a problem in any algorithms aiming to interpret brain activity, but may be effectively solved with machine learning.</p>
+<h2>The Algorithms (Convolutional Neural Networks)</h2>
+<p>The authors of the paper have created two separate convolutional neural networks (CNNs) from the t*n tensor of t time and n sensor readings. After some operations on this tensor, they created the LF-CNN and the VAR-CNN where LF-CNN is simple enough to be analysed so that researchers can see what areas of the brain the algorithm is looking at to determine what the person is sensing/thinking of. This was one of the goals of the paper; to be able to compare the model generated with machine learning, and the model generated by neuroscience research, in terms of what areas of the brain correspond to types of inputs. The second VAR-CNN is more complicated and does not allow the same level of observation, however the results showed that it is more accurate in the tests that were performed in the study.</p>
+<h2>The Tests</h2>
+<p>Experimenters used the algorithm in 4 distinct experiments. The first involved 7 subjects experiencing 5 different types of sensory inputs (5 class test) consisting of left or right visuals, audio and finally a shock in the left or right wrist. A large dataset was generated as each subject contributed on average 1622 tests. This dataset was used heavy pre-processing that removed magnetic field interference, head movement, cardiac and ocular interference and more. All this pre-processing would make it impossible for use in real-time and brain computer interfaces (BCI). The results for this first experiment are further elaborated on in the paper, but the results showed that the two CNN models created by the authors out performed existing machine learning algorithms using CNN and SVM models. Previous accuracy scores averaged 93% to 85%, the simpler LF-CNN scored an average of 95.0% with the more complex VAR-CN scoring 95.8%. For tests done with pseudo-real-time constraints, previous systems scored around 85% - 90% while the new models scored 93-94%. This shows that with clean data, the new algorithms have better accuracy which is closing in on 100%, which is impressive for a complex test with 5 classes of inputs.</p>
+<p>Tests 2 and 3 are very similar and have great implications for BCIs. The tests involved subjects imagining moving their hands, either left or right, without actually moving them. Test 2 including a rest condition where subjects did not imagine moving a hand. This data also underwent very light processing that was done in real time, and did not remove artefacts like head movement or cardiac signals. The results of test two showed consistent improvement again with the new models scoring 84% and 86% on average compared to previous models only scoring between 70% and 80%. For the pseudo-real-time test, the new models did not have such a significant improvement only scoring 78% and 82% compared to the EEGNet-8 model scoring 80%. The range of scores in this test are also substantially wider in this test compared to test 1, meaning the results can sometimes be substantially more accurate or less accurate.</p>
+<p>Test 3 was run in real-real-time with the subjects imagining moving one of their hands. Only the more complex VAR-CNN model was used, and the test was run 3 times on a subject where the model would update itself with learning as it was running. The results table from the paper is shown below. While the sample size is very small, the data shows that the model can become more accurate when it can update as it running. This is a very interesting point which demonstrates that it is possible to have machine learning algorithms act as a BCI in real time, and become more accurate as they train themselves on a single individual.</p>
+<figure class="wp-block-image size-large is-resized">
+<img src="https://stackingroshan.wordpress.com/wp-content/uploads/2020/05/image.png?w=622" class="wp-image-73" width="776" height="213" /><br />
+
+<figcaption>From "Adaptive neural network classifier for decoding MEG signals" page 431</figcaption>
+</figure>
+
+<p>Test 4 used Cam-CNN which is a 2-class dataset that is publicly available. The data is from 250 subjects with 120 reading per person. The data is either auditory stimuli or visual stimuli using left and right sides simultaneously. This data had the same light processing as tests 2 and 3. Researchers from the paper trained their models on 200 of the subjects and then tested it on the remaining 50. Existing models using the same method achieved scores between 90-95% while the new models just slightly beat these with scores of 95.6% and 96% in the pseudo-real-time tests. This is a very simple test with a dataset from a larger number of people, and it has been shown that these machine learning algorithms are very accurate in this test and there is little progress to be made in accuracy.</p>
+<h2>Points of Interest</h2>
+<p>Machine learning algorithms with SVM models and CNN models have been done before, but this paper has proposed a new model that had improvements over previous models across the board. The researchers found that different people do have differences in their brain activity when reacting to the same stimuli. This is even more interesting when they found that the algorithm could become more accurate when it was learning and updating while it was acting as a BCI with a single individual. This is one aspect of the machine learning technology that could be very useful in creating effective BCIs. While the signature of brain activity is slightly different between people, the researchers found that the latency between input and brain activity spikes were very consistent between different people. This latency was also different when comparing different types of sensory inputs. This could prove a useful piece of information to develop algorithms like this in the future.</p>
+<p>The MEG data could scan the brain at 1000Hz, but the researchers found that downscaling the temporal resolution to 125Hz did not reduce the performance of the algorithms, while improving the computational requirements. Furthermore, the LF-CNN was made simpler for the purpose of being able to reverse engineer and observe what the model was using to make predictions. This effectively gave the researchers a heat-map of the brain that showed what areas reacted the most to a given stimuli. This allowed the researchers to compare the machine learnt model with established neuroscience knowledge of the brain, and the results showed very significant correlation.</p>
+<div class="wp-block-spacer" style="height:100px;" aria-hidden="true">
+
+</div>
+
+<h2>Reference</h2>
+<p>Subject Paper: "Adaptive neural network classifier for decoding MEG signals"<br>
+https://www.sciencedirect.com/science/article/pii/S1053811919303544</p>
+  </div>
+  <div class="tag-cloud">
+    <p>
+      <a href="./tag/bci.html">BCI</a>
+      <a href="./tag/cnn.html">CNN</a>
+      <a href="./tag/machine-learning.html">Machine Learning</a>
+      <a href="./tag/neuroscience.html">neuroscience</a>
+    </p>
+  </div>
+
+
+
+
+
+
+</article>
+
+<footer>
+<p>
+  &copy; 2025  - This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nd/4.0/deed.en_US" target="_blank">Creative Commons Attribution-NoDerivatives</a>
+</p>
+<p>
+Built with <a href="http://getpelican.com" target="_blank">Pelican</a> using <a href="http://bit.ly/flex-pelican" target="_blank">Flex</a> theme
+</p><p>
+  <a rel="license"
+     href="http://creativecommons.org/licenses/by-nd/4.0/"
+     target="_blank">
+    <img alt="Creative Commons License"
+         title="Creative Commons License"
+         style="border-width:0"
+           src="https://i.creativecommons.org/l/by-nd/4.0/80x15.png"
+         width="80"
+         height="15"/>
+  </a>
+</p></footer>  </main>
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " Stacking Roshan Blog ",
+  "url" : ".",
+  "image": "",
+  "description": "My Computer Science Blog"
+}
+</script>
+</body>
+</html>

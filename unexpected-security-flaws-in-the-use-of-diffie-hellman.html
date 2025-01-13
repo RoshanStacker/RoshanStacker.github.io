@@ -1,0 +1,211 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="index, follow" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,700;1,400&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="./theme/stylesheet/style.min.css">
+
+    <link id="dark-theme-style" rel="stylesheet" type="text/css"
+          media="(prefers-color-scheme: dark)"
+    href="./theme/stylesheet/dark-theme.min.css">
+
+    <link id="pygments-dark-theme" rel="stylesheet" type="text/css"
+              media="(prefers-color-scheme: dark)"
+          href="./theme/pygments/monokai.min.css">
+    <link id="pygments-light-theme" rel="stylesheet" type="text/css"
+              media="(prefers-color-scheme: light), (prefers-color-scheme: no-preference)"
+          href="./theme/pygments/github.min.css">
+
+
+
+  <link rel="stylesheet" type="text/css" href="./theme/font-awesome/css/fontawesome.css">
+  <link rel="stylesheet" type="text/css" href="./theme/font-awesome/css/brands.css">
+  <link rel="stylesheet" type="text/css" href="./theme/font-awesome/css/solid.css">
+
+
+
+  <!-- Chrome, Firefox OS and Opera -->
+  <meta name="theme-color" content="#fff">
+  <!-- Windows Phone -->
+  <meta name="msapplication-navbutton-color" content="#fff">
+  <!-- iOS Safari -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <!-- Microsoft EDGE -->
+  <meta name="msapplication-TileColor" content="#fff">
+
+  <link href="https://RoshanStacker.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Stacking Roshan Blog Atom">
+
+
+
+
+
+
+
+
+ 
+
+<meta name="author" content="roshanstacker" />
+<meta name="description" content="The miraculous Diffie-Hellman key exchange Published in 1976, the Diffie-Hellman key exchange demonstrated a method for two parties to generate a shared secret key across a public network where anyone eavesdropping on the entire exchange will have trouble learning the shared secret. The whole exchange can be achieved in 3 …" />
+<meta name="keywords" content="Cryptography, Cybersecurity">
+
+
+  <meta property="og:site_name" content="Stacking Roshan Blog"/>
+  <meta property="og:title" content="Unexpected Security Flaws in the use of Diffie-Hellman"/>
+  <meta property="og:description" content="The miraculous Diffie-Hellman key exchange Published in 1976, the Diffie-Hellman key exchange demonstrated a method for two parties to generate a shared secret key across a public network where anyone eavesdropping on the entire exchange will have trouble learning the shared secret. The whole exchange can be achieved in 3 …"/>
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:url" content="./unexpected-security-flaws-in-the-use-of-diffie-hellman.html"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2020-05-25 11:45:00+10:00"/>
+  <meta property="article:modified_time" content=""/>
+  <meta property="article:author" content="./author/roshanstacker.html">
+  <meta property="article:section" content="Post"/>
+  <meta property="article:tag" content="Cryptography"/>
+  <meta property="article:tag" content="Cybersecurity"/>
+  <meta property="og:image" content="">
+
+  <title>Stacking Roshan Blog &ndash; Unexpected Security Flaws in the use of Diffie-Hellman</title>
+
+
+</head>
+<body >
+
+<aside>
+  <div>
+    <a href="./">
+      <img src="./theme/img/profile.png" alt="Conor Atkins" title="Conor Atkins">
+    </a>
+
+    <h1>
+      <a href="./">Conor Atkins</a>
+    </h1>
+
+    <p>Hacker and Automation Engineer</p>
+
+
+
+    <ul class="social">
+      <li>
+        <a class="sc-github"
+           href="https://github.com/RoshanStacker"
+           target="_blank">
+          <i class="fa-brands fa-github"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+</aside>
+  <main>
+
+<nav>
+  <a href="./">Home</a>
+
+
+  <a href="https://RoshanStacker.github.io/feeds/all.atom.xml">Atom</a>
+
+</nav>
+
+<article class="single">
+  <header>
+      
+    <h1 id="unexpected-security-flaws-in-the-use-of-diffie-hellman">Unexpected Security Flaws in the use of Diffie-Hellman</h1>
+    <p>
+      Posted on Mon 25 May 2020 in <a href="./category/post.html">Post</a>
+
+    </p>
+  </header>
+
+
+  <div>
+    <h2>The miraculous Diffie-Hellman key exchange</h2>
+<p>Published in 1976, the Diffie-Hellman key exchange demonstrated a method for two parties to generate a shared secret key across a public network where anyone eavesdropping on the entire exchange will have trouble learning the shared secret. The whole exchange can be achieved in 3 messages. The diagram below shows what variables are sent over the public domain, meaning an eavesdropper will know the public variables.</p>
+<figure class="wp-block-image size-large is-resized">
+<img src="https://stackingroshan.wordpress.com/wp-content/uploads/2020/05/diffie-hellmankeyexchangediagram.png?w=399" class="wp-image-114" width="739" height="432" /><br />
+
+<figcaption>a and b = secret number, g is any number, p is a large prime size 512|768|1024|2048 bits<br />
+ga is (g<sup>a</sup>)mod p<br />
+gab is (g<sup>ab</sup>)mod p</figcaption>
+</figure>
+
+<p>Breaking Diffie-Hellman will require the attacker to compute <em>gab</em> given <em>g, p</em> and <em>ga</em>/<em>gb</em>. An attacker can do the last step that one of sides performs if they can find the secret <em>a</em> or <em>b</em>. However, the key exchange is secure due to the difficulty in reversing the calculation that is done to combine <em>g</em> and <em>a</em>/<em>b</em> (<em>g<sup>a</sup> mod p</em>). In mathematics, reversing the calculation is known as solving the discrete logarithm problem. The amount of difficulty in breaking this security is closely related to be the size of the prime number <em>p</em>. The common sizes of primes are 512 bit, 768 bit, 1024 bit and 2048 bit (as larger primes have a disproportional cost of performance to security gain). The problem that the paper and this blog will discuss is how 512, 768 and potentially 1024 bit key exchanges could be broken on the fly given a substantial (and expensive) but plausible amount of pre-calculation on designated prime numbers.</p>
+<h3>Export grade Diffie-Hellman instead of 'Military Weapons Grade' (Why we use 512 bit)</h3>
+<p>Around 1990s, the US government declared the intellectual property of some strong encryption methods to be 'military weapons grade', which included Diffie-Hellman key exchanges that used more than 512 bits. As a result, if an algorithm or code was published and reached outside the US, the authors would be committing the crime of 'exporting military grade weapons'. From this, 512 bit Diffie-Hellman is known as DHE-EXPORT as it can be export. These restrictions no longer apply, but the 512 bit system is in use in some cases for the purpose of backwards compatibility.</p>
+<h2>Breaking Diffie-Hellman (through pre-computation)</h2>
+<p>As the design of Diffie-Hellman is based around the difficulty of solving the discrete log problem (reversing the calculation that each side makes), the best method of attack for an eavesdropper is to do just that. One of the most efficient algorithms to perform this calculation is known as the number field sieve (NFS) algorithm. It takes a very long time to compute this algorithm for the large prime that are used today, meaning it is impossible to use it in real time. What the researchers have shown is that they are able to pre-compute using a specific prime number <em>p</em>, and after 3 steps, create a logarithm database that stores the results of the computations and allows a 4th step to take the input of a shared key in the Diffie-Hellman exchange (<em>gb</em>/<em>ga</em>) and find the solution in around a minute by looking through the database. This means that not only is it possible to break new key exchanges in effectively real-time, but the pre-computation can be transferred, kept or sold.</p>
+<p>This method of pre-computation to create a database for a single prime number is still a very long process. Researchers with 'academic-level' computational resources managed to solve for a 512 bit prime within a week back in 2015, and with modern hardware and improved software, they can compute a prime in just 2 days. Their 2015 system was made up of 2000-3000 microprocessor cores. The size of this would be beyond an individual but well within the range of larger academic teams and certainly nation states. Beyond 512 bits, the researchers also determined that 768 bit primes could be broken by academic teams with even more time for each prime, and they concluded that given millions in funding, nation states could break a single 1024 bit prime every year. There is evidence from the leaks on the NSA, that they had cracked 1024 bit Diffie-Hellman allowing them to decrypt some VPN traffic.</p>
+<h2>Just use a different prime...</h2>
+<p>The pre-computations take a long time and only give you a database for a single prime number, but the widespread implications of this are severe when you begin to look at how most servers implement Diffie-Hellman in practice. In a 2015 scan of 529,000 HTTPS sites, 68.3% were found to use Diffie-Hellman, and 8.4% used 512 bit (DHE-EXPORT). Of these sites that use 512 bit primes, 82% used the same prime, and another 10% used a second prime. They are the default for Apache and '<em>mod_ssl</em>' respectively. This means that an attacker could perform pre-calculation on just 2 primes, and be able to attack around 92% of websites that use 512 bit Diffie-Hellman.</p>
+<p>Safe primes are important in order to maintain security, which is defined as a prime where <em>(p-1) / 2</em> is also a prime. Finding safe primes that are of the size required can be computationally difficult, which is why most implementations use a publicly known safe prime, such as those in the Oakley groups. As a result, most implementations of Diffie-Hellman have ended up using the same primes meaning that this pre-computation attack, although initially computationally expensive, can have widespread use in the many servers that use the most common primes.</p>
+<p>For efficiently, servers typically use the same secret value for all their key exchanges in order to avoid time calculating based on new private parameters. This should not have a significant effect of security as the client still uses a new secret value every time (however this can be used as discussed later). This use of at least on <em>new</em> secret value every time is call being '<em>ephemeral</em>', and enables <em>forward secrecy</em>. Some servers such as Microsoft change this value every 2 hours, but multiple key exchanges are still done using the same server-held secret value.</p>
+<h2>Downgrading higher bit implementations back to 512 bit</h2>
+<p>In Transport Layer Security (TLS), a handshake occurs between the client and the server to decide which cryptographic system will be used i.e. regular DHE or DHE-EXPORT. A client sends their list of supported methods which allows for a Man in the Middle attack (MITM) to downgrade their connection to use DHE-EXPORT (which is 512bit) every time. This is done by hijacking the client's message to ask for DHE-EXPORT to be used instead of DHE, and then simply eavesdropping on the parameters (<em>g</em>, <em>p</em> and <em>gb</em>) which the sever sends to the client for the key exchange. Given the <em>p</em> which the attacker has used in the pre-computation, and the <em>g</em> and <em>gb</em> values, it is possible to find the value of <em>b</em> within a minute or so. The researchers were able to perform this within an average of 70 seconds (ranging from 34 - 206 seconds). When <em>b</em> is known, the attacker can block the server, or continue to passively eavesdrop and wait for the client to send <em>ga</em>, and then find the secret private key <em>gba</em> that is used for encryption/decryption of messages for the rest of the session.</p>
+<p>Some systems have time-outs that require the MITM do the computation quickly and potentially in under the minute that is possible with the pre-computation method. In this case, the fact that some servers use the same secret value <em>b</em> for multiple different handshakes, an attack can hijack one handshake to calculate <em>b</em>, and then use <em>b</em> for future handshakes. However, many systems have a workaround such as Firefox's alerts that reset the timer, and some systems have a long or non-existent time-out for responses.</p>
+<p>For attacks on 768 bit, and potentially 1024 bit, where pre-computation has been done (with a larger cost of time and resources), the resulting lookup of the database that is create will take even longer than a database for a 512 bit prime. So utilising the method of cracking the server's private key in one handshake that will time-out, and then using the private key to crack a new handshake in real-time is important.</p>
+<h2>Summary of the Attack</h2>
+<p>Step 1: Pre-compute a given prime number that the target server uses, for 512 bit primes, this can be done in just a few days using academic level resources. For 1024 bit primes, a nation state could reasonably crack one prime in a year. The result of this pre-computation is a logarithm database for the given prime.</p>
+<p>Step 2: Start a Man in the Middle attack in order to hijack the clients request to use regular DHE, and change it to request 512 bit DHE-EXPORT if possible.</p>
+<p>Step 3: Read the server's response that includes the values <em>g</em>, large prime <em>p</em>, and server public key <em>gb</em>.</p>
+<p>Step 4: Use values <em>g</em> and <em>gb</em> to lookup the pre-computed database and find the corresponding server secret value <em>b</em>. This takes around a minute for 512 bit primes when using academic level resources and may time-out a connection.</p>
+<p>Step 4.5: If the MITM attack failed due to a time-out, use the now calculated <em>b</em> value in a new handshake.</p>
+<p>Step 5: Read the clients calculated <em>ga</em> values and combine it with the known <em>b</em> value to find the secret key <em>gab</em> that was exchanged. Now you can decrypt messages until the session ends.</p>
+<h2>References</h2>
+<p>Subject Research Paper: "https://doi.org/10.1145/2810103.2813707",</p>
+<p>Computerphile youtube:<br>
+https://www.youtube.com/watch?v=NmM9HA2MQGI&amp;<br>
+https://www.youtube.com/watch?v=Yjrfm_oRO0w</p>
+<p>Textbook: "Network Security, Private Communication in a Public World" p.g. 166-167, Second Edition, Charlie Kaufman, Radia Perlman, Mike Speciner  </p>
+<p>https://tls.mbed.org/kb/cryptography/ephemeral-diffie-hellman</p>
+  </div>
+  <div class="tag-cloud">
+    <p>
+      <a href="./tag/cryptography.html">Cryptography</a>
+      <a href="./tag/cybersecurity.html">Cybersecurity</a>
+    </p>
+  </div>
+
+
+
+
+
+
+</article>
+
+<footer>
+<p>
+  &copy; 2025  - This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nd/4.0/deed.en_US" target="_blank">Creative Commons Attribution-NoDerivatives</a>
+</p>
+<p>
+Built with <a href="http://getpelican.com" target="_blank">Pelican</a> using <a href="http://bit.ly/flex-pelican" target="_blank">Flex</a> theme
+</p><p>
+  <a rel="license"
+     href="http://creativecommons.org/licenses/by-nd/4.0/"
+     target="_blank">
+    <img alt="Creative Commons License"
+         title="Creative Commons License"
+         style="border-width:0"
+           src="https://i.creativecommons.org/l/by-nd/4.0/80x15.png"
+         width="80"
+         height="15"/>
+  </a>
+</p></footer>  </main>
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " Stacking Roshan Blog ",
+  "url" : ".",
+  "image": "",
+  "description": "My Computer Science Blog"
+}
+</script>
+</body>
+</html>

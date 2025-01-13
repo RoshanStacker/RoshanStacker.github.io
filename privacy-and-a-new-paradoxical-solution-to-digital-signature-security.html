@@ -1,0 +1,197 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="index, follow" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,700;1,400&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="./theme/stylesheet/style.min.css">
+
+    <link id="dark-theme-style" rel="stylesheet" type="text/css"
+          media="(prefers-color-scheme: dark)"
+    href="./theme/stylesheet/dark-theme.min.css">
+
+    <link id="pygments-dark-theme" rel="stylesheet" type="text/css"
+              media="(prefers-color-scheme: dark)"
+          href="./theme/pygments/monokai.min.css">
+    <link id="pygments-light-theme" rel="stylesheet" type="text/css"
+              media="(prefers-color-scheme: light), (prefers-color-scheme: no-preference)"
+          href="./theme/pygments/github.min.css">
+
+
+
+  <link rel="stylesheet" type="text/css" href="./theme/font-awesome/css/fontawesome.css">
+  <link rel="stylesheet" type="text/css" href="./theme/font-awesome/css/brands.css">
+  <link rel="stylesheet" type="text/css" href="./theme/font-awesome/css/solid.css">
+
+
+
+  <!-- Chrome, Firefox OS and Opera -->
+  <meta name="theme-color" content="#fff">
+  <!-- Windows Phone -->
+  <meta name="msapplication-navbutton-color" content="#fff">
+  <!-- iOS Safari -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <!-- Microsoft EDGE -->
+  <meta name="msapplication-TileColor" content="#fff">
+
+  <link href="https://RoshanStacker.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Stacking Roshan Blog Atom">
+
+
+
+
+
+
+
+
+ 
+
+<meta name="author" content="roshanstacker" />
+<meta name="description" content="Based on the paper &#34;A “Paradoxical” Solution to the Signature Problem&#34; by researchers at MIT. See references for more information It is impossible to live an efficient life in the technology space without having data stored online in cloud services, email accounts or even online bank accounts. The internet makes …" />
+<meta name="keywords" content="Cryptography, Cybersecurity">
+
+
+  <meta property="og:site_name" content="Stacking Roshan Blog"/>
+  <meta property="og:title" content="Privacy and a New &#34;Paradoxical&#34; Solution to Digital Signature Security"/>
+  <meta property="og:description" content="Based on the paper &#34;A “Paradoxical” Solution to the Signature Problem&#34; by researchers at MIT. See references for more information It is impossible to live an efficient life in the technology space without having data stored online in cloud services, email accounts or even online bank accounts. The internet makes …"/>
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:url" content="./privacy-and-a-new-paradoxical-solution-to-digital-signature-security.html"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2020-05-17 05:11:00+10:00"/>
+  <meta property="article:modified_time" content=""/>
+  <meta property="article:author" content="./author/roshanstacker.html">
+  <meta property="article:section" content="Post"/>
+  <meta property="article:tag" content="Cryptography"/>
+  <meta property="article:tag" content="Cybersecurity"/>
+  <meta property="og:image" content="">
+
+  <title>Stacking Roshan Blog &ndash; Privacy and a New &#34;Paradoxical&#34; Solution to Digital Signature Security</title>
+
+
+</head>
+<body >
+
+<aside>
+  <div>
+    <a href="./">
+      <img src="./theme/img/profile.png" alt="Conor Atkins" title="Conor Atkins">
+    </a>
+
+    <h1>
+      <a href="./">Conor Atkins</a>
+    </h1>
+
+    <p>Hacker and Automation Engineer</p>
+
+
+
+    <ul class="social">
+      <li>
+        <a class="sc-github"
+           href="https://github.com/RoshanStacker"
+           target="_blank">
+          <i class="fa-brands fa-github"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+</aside>
+  <main>
+
+<nav>
+  <a href="./">Home</a>
+
+
+  <a href="https://RoshanStacker.github.io/feeds/all.atom.xml">Atom</a>
+
+</nav>
+
+<article class="single">
+  <header>
+      
+    <h1 id="privacy-and-a-new-paradoxical-solution-to-digital-signature-security">Privacy and a New "Paradoxical" Solution to Digital Signature Security</h1>
+    <p>
+      Posted on Sun 17 May 2020 in <a href="./category/post.html">Post</a>
+
+    </p>
+  </header>
+
+
+  <div>
+    <p><em>Based on the paper "A “Paradoxical” Solution to the Signature Problem" by researchers at MIT.<br>
+See references for more information</em></p>
+<p>It is impossible to live an efficient life in the technology space without having data stored online in cloud services, email accounts or even online bank accounts. The internet makes using technology extremely useful with all the cloud sharing between devices from desktops to laptops to smart phones. But given this, I feel that privacy is extremely important and I strive to control the security of any data I store online, including using proton mail for no-knowledge encryption in my emails, or manual encryption of files before backing up to google drive.</p>
+<p>A new problem being solved in digital security is the signature problem.</p>
+<h2>The Signature Problem</h2>
+<p>When communicating digitally over the internet, it is very easy for transmissions to be intercepted which is why encryption is very important and a major focus of militaries and intelligence agencies around the world. Encryption uses secret information on both sides of communication to allow the messages sent online and public information sent alongside the messages to be seen by anyone, but requires the secret information to be read, keeping the messages private. A step beyond this is to add some extra information that lets any receiver of the message to be certain as to who the message came from, this is known as a digital signature.</p>
+<p>What makes digital signatures different from encryption is that for encryption, public information with the message should not give any information to attackers. While for digital signatures, public information and the message can allow anyone to verify that the message was indeed sent from the person with the digital signature. What digital signatures must not allow is for the public information to allow attackers to forge the signature on their own messages.</p>
+<h2>Attacks on Signatures and the "Paradox"</h2>
+<p>A successful attack on a signature is achieved when the secret information is learnt, enabling the attacker to forge the signature on new messages, or if the attack can create an efficient algorithm that can create an equivalent signature, enabling forgery. The two main attacks to achieve this forgery are brute force attacks and chosen message attacks. Brute forcing is simply guessing and checking the secret information until the guess turns out to be correct. In most cases, the algorithms for encryption and signing are public knowledge, so guessing and checking is easy. This attack can also use the public key as information to help the guessing. The difficulty comes from the length of the private keys. More effective attacks are chosen or known message attacks. These attacks use knowledge of the message to break the signature. These attacks can be more effective in a so called "adaptive chosen message attack", where the attackers can choose a custom message based on the public key and based on previous messages.</p>
+<p>The paradox, as the paper explains, is a "folklore" in the cryptography community rather than a mathematically proven paradox. It states that it is impossible for the following two statements to be true at the same time in a signature encryption method:</p>
+<p><em>Forging a signature using public information is equivalent to factoring the private keys.<br>
+</em><em>and</em><em><br>
+An adaptive chosen message attack does not benefit from knowledge of previously signed messages.</em></p>
+<p>A simplified reason for this paradox is that for a signature scheme designed with a trap-door function that makes reversing the scheme equivalent to factoring the number, an attacker can choose a message that represents a mathematical value such as a square number. When the attacker receive this message once it has been signed, they are significantly closer to finding the secret values which means that forging in not equivalent to factoring with the use of adaptive chose message attacks.</p>
+<h2>The Solution</h2>
+<p>What the researchers have done is what they call a <em>claw-free family</em> which is using not one trap door function, but two.</p>
+<figure class="wp-block-image size-large is-resized">
+<img src="https://stackingroshan.wordpress.com/wp-content/uploads/2020/05/image1.png?w=400" class="wp-image-104" width="213" height="213" />
+</figure>
+
+<p>As shown in the diagram above, the functions f<sub>0</sub> and f<sub>1</sub> have directions which represent the trap door functions, where calculating with X or Y inputs is easy, but calculating X or Y from the result ( f<sub>0</sub>(x) or f<sub>1</sub>(y) ) is very difficult. The added complexity in this model going from one key (X) to two keys (X, Y) and two trap door functions (f<sub>0</sub>,f<sub>1</sub>), results in attackers who know what the functions are, and who know what the result is, cannot easily find X or Y. More crucially, chosen/known message attacks and attacks using the public keys do not gain an advantage in finding X and Y. This proposes a solution to the paradox where calculating the functions in reverse is as difficult as factoring, and preventing public information, including the content of the messages, from being useful to attackers.</p>
+<h2>References</h2>
+<p>"<a href="https://dl.acm.org/doi/pdf/10.1145/3335741.3335753">A" paradoxical" solution to the signature problem</a>"<br>
+Shafi Goldwasser, Silvio Micali, Ronald L Rivest  </p>
+  </div>
+  <div class="tag-cloud">
+    <p>
+      <a href="./tag/cryptography.html">Cryptography</a>
+      <a href="./tag/cybersecurity.html">Cybersecurity</a>
+    </p>
+  </div>
+
+
+
+
+
+
+</article>
+
+<footer>
+<p>
+  &copy; 2025  - This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nd/4.0/deed.en_US" target="_blank">Creative Commons Attribution-NoDerivatives</a>
+</p>
+<p>
+Built with <a href="http://getpelican.com" target="_blank">Pelican</a> using <a href="http://bit.ly/flex-pelican" target="_blank">Flex</a> theme
+</p><p>
+  <a rel="license"
+     href="http://creativecommons.org/licenses/by-nd/4.0/"
+     target="_blank">
+    <img alt="Creative Commons License"
+         title="Creative Commons License"
+         style="border-width:0"
+           src="https://i.creativecommons.org/l/by-nd/4.0/80x15.png"
+         width="80"
+         height="15"/>
+  </a>
+</p></footer>  </main>
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " Stacking Roshan Blog ",
+  "url" : ".",
+  "image": "",
+  "description": "My Computer Science Blog"
+}
+</script>
+</body>
+</html>

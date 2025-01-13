@@ -1,0 +1,187 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="index, follow" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,700;1,400&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="./theme/stylesheet/style.min.css">
+
+    <link id="dark-theme-style" rel="stylesheet" type="text/css"
+          media="(prefers-color-scheme: dark)"
+    href="./theme/stylesheet/dark-theme.min.css">
+
+    <link id="pygments-dark-theme" rel="stylesheet" type="text/css"
+              media="(prefers-color-scheme: dark)"
+          href="./theme/pygments/monokai.min.css">
+    <link id="pygments-light-theme" rel="stylesheet" type="text/css"
+              media="(prefers-color-scheme: light), (prefers-color-scheme: no-preference)"
+          href="./theme/pygments/github.min.css">
+
+
+
+  <link rel="stylesheet" type="text/css" href="./theme/font-awesome/css/fontawesome.css">
+  <link rel="stylesheet" type="text/css" href="./theme/font-awesome/css/brands.css">
+  <link rel="stylesheet" type="text/css" href="./theme/font-awesome/css/solid.css">
+
+
+
+  <!-- Chrome, Firefox OS and Opera -->
+  <meta name="theme-color" content="#fff">
+  <!-- Windows Phone -->
+  <meta name="msapplication-navbutton-color" content="#fff">
+  <!-- iOS Safari -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <!-- Microsoft EDGE -->
+  <meta name="msapplication-TileColor" content="#fff">
+
+  <link href="https://RoshanStacker.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Stacking Roshan Blog Atom">
+
+
+
+
+
+
+
+
+ 
+
+<meta name="author" content="roshanstacker" />
+<meta name="description" content="Based on 2003 paper from HP Labs and published in FAST How can we make full use of cloud storage providers and online file sharing, while also protecting our data when we can&#39;t trust the big companies providing the cloud storage? The answer is end-to-end encryption and forced no-knowledge storage …" />
+<meta name="keywords" content="Cryptography">
+
+
+  <meta property="og:site_name" content="Stacking Roshan Blog"/>
+  <meta property="og:title" content="Encrypting Files and Not Trusting Cloud Storage Providers"/>
+  <meta property="og:description" content="Based on 2003 paper from HP Labs and published in FAST How can we make full use of cloud storage providers and online file sharing, while also protecting our data when we can&#39;t trust the big companies providing the cloud storage? The answer is end-to-end encryption and forced no-knowledge storage …"/>
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:url" content="./encrypting-files-and-not-trusting-cloud-storage-providers.html"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2020-05-28 06:38:00+10:00"/>
+  <meta property="article:modified_time" content=""/>
+  <meta property="article:author" content="./author/roshanstacker.html">
+  <meta property="article:section" content="Post"/>
+  <meta property="article:tag" content="Cryptography"/>
+  <meta property="og:image" content="">
+
+  <title>Stacking Roshan Blog &ndash; Encrypting Files and Not Trusting Cloud Storage Providers</title>
+
+
+</head>
+<body >
+
+<aside>
+  <div>
+    <a href="./">
+      <img src="./theme/img/profile.png" alt="Conor Atkins" title="Conor Atkins">
+    </a>
+
+    <h1>
+      <a href="./">Conor Atkins</a>
+    </h1>
+
+    <p>Hacker and Automation Engineer</p>
+
+
+
+    <ul class="social">
+      <li>
+        <a class="sc-github"
+           href="https://github.com/RoshanStacker"
+           target="_blank">
+          <i class="fa-brands fa-github"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+</aside>
+  <main>
+
+<nav>
+  <a href="./">Home</a>
+
+
+  <a href="https://RoshanStacker.github.io/feeds/all.atom.xml">Atom</a>
+
+</nav>
+
+<article class="single">
+  <header>
+      
+    <h1 id="encrypting-files-and-not-trusting-cloud-storage-providers">Encrypting Files and Not Trusting Cloud Storage Providers</h1>
+    <p>
+      Posted on Thu 28 May 2020 in <a href="./category/post.html">Post</a>
+
+    </p>
+  </header>
+
+
+  <div>
+    <p><em>Based on 2003 paper from HP Labs and published in FAST</em></p>
+<p>How can we make full use of cloud storage providers and online file sharing, while also protecting our data when we can't trust the big companies providing the cloud storage? The answer is end-to-end encryption and forced no-knowledge storage. The best part is that you can have your cake and eat it too, since this paper shows ways to incorporate the simple file sharing mechanisms popularised in google docs and drive, and the encryption.</p>
+<h2>The Problem and the Threat Model</h2>
+<p>We are using this system primarily due to the lack of trust of the server. More specifically, we do not trust the server to keep the files confidential and not skim over them. However, as the data is still stored on the servers, we must trust they do not simply destroy the data entirely. To get around this, a user could implement multiple server providers and copy the same techniques there.</p>
+<p>Trust is required in the client's machine where the encryption and other execution is done. This may lack perfect trust due to viruses and other malware, but this is nessesary and would be for almost any cryptographic and security system. There is also trust placed on the key exchanges and distribution as the client will have full control over the keys. This trust system and threat model is perfect though, since almost all trust is put under the direct control of the user, and away from storage providers.</p>
+<h2>The Solution</h2>
+<p>Encrypting files is the first step in the solution, but it would be very inefficient to encrypt every file separately. File groups are used where the entire group has the same symmetric encryption key. These file groups are different to file folders and do not have anything to do with file hierarchy. Files have their file group defined in their meta data which allows a small number of groups that reflect who has access to the files, rather than the location of the files in the hierarchy. A small number of file groups, and therefore keys, is important as key distribution and control is done entirely by the user, meaning less keys is very useful for reducing user side overheads.</p>
+<p>To achieve a differentiation between read permissions and writing permissions, asymmetric keys are used. The contents of encrypted files are put through a hash function and signed using a private RSA key. This signing can be verified using the public RSA key. As such, the public RSA key can be given to those for reading, and the private key is kept for writers.</p>
+<p>A final major problem is revoking access from users. When the server is trusted, this is easily done using user authentication. This is not feasible when the server is not trusted as the server would, in general, need the ability to access the information in order to give that ability to specific users. The server would also cache information, particularly about the users, which is trusting the server with more information than is ideal. The solution is to use key rotation. Keys will change over time, and given the latest keys, a user can generate all previous key versions. Only the owner can generate the future keys. With these properties, a user can lose access if the owner does not send new keys. This is <em>lazy revocation</em> as the user still has access to the files from the past, but this maintains forward secrecy which is the primary security concern. Accepting this shortcoming avoids a significant amount of computational time as each revocation would require a complete re-encryption of all files. Instead, re-encryption is simply done on the next update of the file.</p>
+<p>Revoking read privileges versus write privileges relates to revoking the verification RSA key for readers, and the signing RSA key for writers. A problem is that writers have the ability to sign new files, and would hold the next key in the key rotation. To avoid expensive re-encryption when writers lose their privilege, the meta data of files can be updated immediately as a low cost and mostly effective security measure. Data writes can also be validated by the server using an access control list which is effectively like a shared password for writing. This would blocked most updates from revoked writers, however there still remains some attacks where a revoked writer makes changes that can fool a reader with keys that are out of date. The only way to block these revoked writer problems with with aggressive key changes, but this effort may not be worth it if the users' risk appetite is moderate enough.</p>
+<h2>Conclusion</h2>
+<p>The final Plutus file system is quite simple and is cryptographically effective at providing user roles and blocking the server from knowledge of the files. In the paper, the researchers evaluate the performance and showed that it was as good if not better than comparable and popular methods that encrypt the transmission of data to the server and trust the server. Take note that is paper is from 2003. A major update would be to use AES for symmetric encryption instead of triple DES as done in the paper.</p>
+<p>A final point that makes the system very practical is the scalability. As cryptographic overhead is performed almost entirely on the client's side, and key distribution is done by the client, the server does not expended extra computational power. As such, this can be implemented and server owners will not see an added cost, which means they should premise this system for use on their servers. This overhead place on the user also allows the size of the storage space used to grow and grow without having a compounding impact of the server and extra space required. The Plutus file system seems to be a very effective and cryptographically secure way to store files and collaborate without trusting the server where the files are stored.</p>
+<h2>References</h2>
+<p>Subject Paper: "<strong>Plutus: Scalable secure file sharing on untrusted storage</strong>", Mahesh Kallahalla, Erik Riedel, Ram Swaminathan, Qian Wang, Kevin Fu,<br>
+https://www.usenix.org/legacy/event/fast03/tech/full_papers/kallahalla/kallahalla_html/</p>
+  </div>
+  <div class="tag-cloud">
+    <p>
+      <a href="./tag/cryptography.html">Cryptography</a>
+    </p>
+  </div>
+
+
+
+
+
+
+</article>
+
+<footer>
+<p>
+  &copy; 2025  - This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nd/4.0/deed.en_US" target="_blank">Creative Commons Attribution-NoDerivatives</a>
+</p>
+<p>
+Built with <a href="http://getpelican.com" target="_blank">Pelican</a> using <a href="http://bit.ly/flex-pelican" target="_blank">Flex</a> theme
+</p><p>
+  <a rel="license"
+     href="http://creativecommons.org/licenses/by-nd/4.0/"
+     target="_blank">
+    <img alt="Creative Commons License"
+         title="Creative Commons License"
+         style="border-width:0"
+           src="https://i.creativecommons.org/l/by-nd/4.0/80x15.png"
+         width="80"
+         height="15"/>
+  </a>
+</p></footer>  </main>
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " Stacking Roshan Blog ",
+  "url" : ".",
+  "image": "",
+  "description": "My Computer Science Blog"
+}
+</script>
+</body>
+</html>

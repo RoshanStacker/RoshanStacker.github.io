@@ -1,0 +1,193 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="index, follow" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,700;1,400&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="./theme/stylesheet/style.min.css">
+
+    <link id="dark-theme-style" rel="stylesheet" type="text/css"
+          media="(prefers-color-scheme: dark)"
+    href="./theme/stylesheet/dark-theme.min.css">
+
+    <link id="pygments-dark-theme" rel="stylesheet" type="text/css"
+              media="(prefers-color-scheme: dark)"
+          href="./theme/pygments/monokai.min.css">
+    <link id="pygments-light-theme" rel="stylesheet" type="text/css"
+              media="(prefers-color-scheme: light), (prefers-color-scheme: no-preference)"
+          href="./theme/pygments/github.min.css">
+
+
+
+  <link rel="stylesheet" type="text/css" href="./theme/font-awesome/css/fontawesome.css">
+  <link rel="stylesheet" type="text/css" href="./theme/font-awesome/css/brands.css">
+  <link rel="stylesheet" type="text/css" href="./theme/font-awesome/css/solid.css">
+
+
+
+  <!-- Chrome, Firefox OS and Opera -->
+  <meta name="theme-color" content="#fff">
+  <!-- Windows Phone -->
+  <meta name="msapplication-navbutton-color" content="#fff">
+  <!-- iOS Safari -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <!-- Microsoft EDGE -->
+  <meta name="msapplication-TileColor" content="#fff">
+
+  <link href="https://RoshanStacker.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Stacking Roshan Blog Atom">
+
+
+
+
+
+
+
+
+ 
+
+<meta name="author" content="roshanstacker" />
+<meta name="description" content="What is Taint Analysis? Taint analysis for android apps is the process of detecting applications which collect users&#39; sensitive information and leaks them to external sources, regardless of the the application developers did this maliciously or accidentally. The two methods for doing this analysis is dynamic and static, where dynamic …" />
+<meta name="keywords" content="Android, Taint Analysis, Type System">
+
+
+  <meta property="og:site_name" content="Stacking Roshan Blog"/>
+  <meta property="og:title" content="Using Type Systems for Taint Analysis for Android Apps"/>
+  <meta property="og:description" content="What is Taint Analysis? Taint analysis for android apps is the process of detecting applications which collect users&#39; sensitive information and leaks them to external sources, regardless of the the application developers did this maliciously or accidentally. The two methods for doing this analysis is dynamic and static, where dynamic …"/>
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:url" content="./type-based-taint-analysis.html"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2020-04-28 04:15:00+10:00"/>
+  <meta property="article:modified_time" content=""/>
+  <meta property="article:author" content="./author/roshanstacker.html">
+  <meta property="article:section" content="Post"/>
+  <meta property="article:tag" content="Android"/>
+  <meta property="article:tag" content="Taint Analysis"/>
+  <meta property="article:tag" content="Type System"/>
+  <meta property="og:image" content="">
+
+  <title>Stacking Roshan Blog &ndash; Using Type Systems for Taint Analysis for Android Apps</title>
+
+
+</head>
+<body >
+
+<aside>
+  <div>
+    <a href="./">
+      <img src="./theme/img/profile.png" alt="Conor Atkins" title="Conor Atkins">
+    </a>
+
+    <h1>
+      <a href="./">Conor Atkins</a>
+    </h1>
+
+    <p>Hacker and Automation Engineer</p>
+
+
+
+    <ul class="social">
+      <li>
+        <a class="sc-github"
+           href="https://github.com/RoshanStacker"
+           target="_blank">
+          <i class="fa-brands fa-github"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+</aside>
+  <main>
+
+<nav>
+  <a href="./">Home</a>
+
+
+  <a href="https://RoshanStacker.github.io/feeds/all.atom.xml">Atom</a>
+
+</nav>
+
+<article class="single">
+  <header>
+      
+    <h1 id="type-based-taint-analysis">Using Type Systems for Taint Analysis for Android Apps</h1>
+    <p>
+      Posted on Tue 28 April 2020 in <a href="./category/post.html">Post</a>
+
+    </p>
+  </header>
+
+
+  <div>
+    <h2>What is Taint Analysis?</h2>
+<p>Taint analysis for android apps is the process of detecting applications which collect users' sensitive information and leaks them to external sources, regardless of the the application developers did this maliciously or accidentally. The two methods for doing this analysis is dynamic and static, where dynamic is done by monitoring an application while it is being run. Due to this analysis being performed alongside the application, the application will run slower. Another major short coming of the dynamic approach is that it will only detect leaking of sensitive data (taint) if it is actually leaked during the runtime when the analysis takes place. Meaning that it will fail to detect taint in some applications. The alternative is static taint analysis which is what I will talk about here.</p>
+<p>Static taint analysis involves looking at the program code itself without running the program. There are many benefits over dynamic here, such as not having to run the app that may be malicious, having full access to the app's capabilities (without having to run the app and run all branches of the tree) and being able to run the app after without any slowdown. Static analysis is easy with android apps as the .apk file they are stored in can be de-compiled into java source code, and the source code can be analysed including libraries and classes.</p>
+<p>The authors Wei Huang, Yao Dong, Ana Milanova and Julian Dolby who have written the paper on this topic referenced below, have presented the systems, DFlow and DroidInfer. The authors have presented this system to demonstrate a method of performing static taint analysis, using a <em>type system</em>.</p>
+<h2>Type Systems</h2>
+<p>A type system in programming is the idea that variables and pieces of data have a type, such as integer, floating point, string, etc. and depending on the type of the data, certain operations and conversions can or cannot take place. For example, it is possible to change an integer into a float, and to multiply a float by an integer, but trying to convert an integer to a string is not possible in a simple way using type conversion (it requires a more substantial algorithm). Type systems are often used to detect bugs in code during compilation where it can check if operations and conversions make sense. The system proposed by the authors of the paper use their system to analyse the source code of the programs in a similar fashion to a compiler.</p>
+<h2>Analysing Taint with a Type System</h2>
+<p>The technique proposed in the paper uses two types that are applied to variables in the source code; <strong>Safe</strong> and <strong>Tainted</strong> (some variables can have no type and be ignored). A safe variable is a variable that contains sensitive information. A variable becomes safe when it is assigned a value from a source or sensor that is considered sensitive, such as GPS location or device ID. If a variable takes a value from a safe variable, the variable also becomes safe. An example would be a variable that is storing the device ID and is set to type safe, then a second variable that is a URL string appends the device ID variable, the URL variable is then set to type safe due to appending a safe variable. The flow of assigning the safe type to the source code goes forwards through the code similar to the execution of the program.</p>
+<p>The tainted variable type is one that is eventually sent to an "untrusted sink". This could be a data log file or being sent over a HTTP web request. This means a tainted variable is a variable that gets sent to an untrusted place. When tainted variable takes a value from another variable, the variable becomes tainted as well. An example would be loading a URL string for a http request, which sets the URL string to be tainted. Before the request, the URL string was constructed using a combination of multiple strings and variables, all these variables become tainted too. The flow of assigning the tainted variable type goes backwards from the sink to the variable declaration, the opposite to the safe type.</p>
+<p>The rules of the type system state that a safe variable cannot be declared a tainted variable and vice versa. So when the type system is run over source code, a type error will occur when a safe variable and a tainted variable have a data flow, which represents data from a sensitive source in a safe variable, flowing into a tainted variable which eventually sends the data to an untrusted sink, hence marking the program as tainted. Therefore a type error in the type system means the program is tainted. This is how the system proposed in the paper works. The only input from the user to use the system is flagging the sensitive data sources and untrusted data sinks.</p>
+<h2>The Results</h2>
+<p>In the paper, the authors tested their taint analysis systems with other system that are already available. The results showed their new system to have a similar accuracy when it flagged apps as tainted, but had a significant reduction in the number of tainted data flows that were missed.</p>
+<div class="wp-block-spacer" style="height:118px;" aria-hidden="true">
+
+</div>
+
+<h2>Reference</h2>
+<p>"Scalable and precise taint analysis for Android", Wei Huang, Yao Dong, Ana Milanova and Julian Dolby https://dl.acm.org/doi/10.1145/2771783.2771803</p>
+  </div>
+  <div class="tag-cloud">
+    <p>
+      <a href="./tag/android.html">Android</a>
+      <a href="./tag/taint-analysis.html">Taint Analysis</a>
+      <a href="./tag/type-system.html">Type System</a>
+    </p>
+  </div>
+
+
+
+
+
+
+</article>
+
+<footer>
+<p>
+  &copy; 2025  - This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nd/4.0/deed.en_US" target="_blank">Creative Commons Attribution-NoDerivatives</a>
+</p>
+<p>
+Built with <a href="http://getpelican.com" target="_blank">Pelican</a> using <a href="http://bit.ly/flex-pelican" target="_blank">Flex</a> theme
+</p><p>
+  <a rel="license"
+     href="http://creativecommons.org/licenses/by-nd/4.0/"
+     target="_blank">
+    <img alt="Creative Commons License"
+         title="Creative Commons License"
+         style="border-width:0"
+           src="https://i.creativecommons.org/l/by-nd/4.0/80x15.png"
+         width="80"
+         height="15"/>
+  </a>
+</p></footer>  </main>
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " Stacking Roshan Blog ",
+  "url" : ".",
+  "image": "",
+  "description": "My Computer Science Blog"
+}
+</script>
+</body>
+</html>
