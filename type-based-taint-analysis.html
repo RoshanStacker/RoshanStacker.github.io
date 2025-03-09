@@ -61,18 +61,18 @@
  
 
 <meta name="author" content="roshanstacker" />
-<meta name="description" content="What is Taint Analysis? Taint analysis for android apps is the process of detecting applications which collect users&#39; sensitive information and leaks them to external sources, regardless of the the application developers did this maliciously or accidentally. The two methods for doing this analysis is dynamic and static, where dynamic …" />
+<meta name="description" content="What is Taint Analysis? Taint analysis is the process of detecting applications which collect users&#39; sensitive information and leaks them to external sources, regardless of if the application developers did this maliciously or accidentally. The two methods for doing this analysis is dynamic and static, where dynamic is done by …" />
 <meta name="keywords" content="Android, Taint Analysis, Type System">
 
 
   <meta property="og:site_name" content="Stacking Roshan Blog"/>
   <meta property="og:title" content="Using Type Systems for Taint Analysis for Android Apps"/>
-  <meta property="og:description" content="What is Taint Analysis? Taint analysis for android apps is the process of detecting applications which collect users&#39; sensitive information and leaks them to external sources, regardless of the the application developers did this maliciously or accidentally. The two methods for doing this analysis is dynamic and static, where dynamic …"/>
+  <meta property="og:description" content="What is Taint Analysis? Taint analysis is the process of detecting applications which collect users&#39; sensitive information and leaks them to external sources, regardless of if the application developers did this maliciously or accidentally. The two methods for doing this analysis is dynamic and static, where dynamic is done by …"/>
   <meta property="og:locale" content="en_US"/>
   <meta property="og:url" content="./type-based-taint-analysis.html"/>
   <meta property="og:type" content="article"/>
   <meta property="article:published_time" content="2020-04-28 04:15:00+10:00"/>
-  <meta property="article:modified_time" content=""/>
+  <meta property="article:modified_time" content="2025-03-09 12:00:00+11:00"/>
   <meta property="article:author" content="./author/roshanstacker.html">
   <meta property="article:section" content="Post"/>
   <meta property="article:tag" content="Android"/>
@@ -135,9 +135,19 @@
 
   <div>
     <h2>What is Taint Analysis?</h2>
-<p>Taint analysis for android apps is the process of detecting applications which collect users' sensitive information and leaks them to external sources, regardless of the the application developers did this maliciously or accidentally. The two methods for doing this analysis is dynamic and static, where dynamic is done by monitoring an application while it is being run. Due to this analysis being performed alongside the application, the application will run slower. Another major short coming of the dynamic approach is that it will only detect leaking of sensitive data (taint) if it is actually leaked during the runtime when the analysis takes place. Meaning that it will fail to detect taint in some applications. The alternative is static taint analysis which is what I will talk about here.</p>
-<p>Static taint analysis involves looking at the program code itself without running the program. There are many benefits over dynamic here, such as not having to run the app that may be malicious, having full access to the app's capabilities (without having to run the app and run all branches of the tree) and being able to run the app after without any slowdown. Static analysis is easy with android apps as the .apk file they are stored in can be de-compiled into java source code, and the source code can be analysed including libraries and classes.</p>
-<p>The authors Wei Huang, Yao Dong, Ana Milanova and Julian Dolby who have written the paper on this topic referenced below, have presented the systems, DFlow and DroidInfer. The authors have presented this system to demonstrate a method of performing static taint analysis, using a <em>type system</em>.</p>
+<p>Taint analysis is the process of detecting applications which collect users' 
+sensitive information and leaks them to external sources, regardless of if the 
+application developers did this maliciously or accidentally. The two methods for 
+doing this analysis is dynamic and static, where dynamic is done by monitoring an 
+application while it is being run. Due to this analysis being performed alongside 
+the application, the application will run slower. Another major short coming of the 
+dynamic approach is that it will only detect leaking of sensitive data (taint) if 
+it is actually leaked during the runtime when the analysis takes place. Meaning 
+that it will fail to detect taint in some applications. The alternative is static 
+taint analysis which is what I will talk about here.</p>
+<p>Static taint analysis involves looking at the program code itself without running 
+the program. There are many benefits over dynamic here, such as not having to run the app that may be malicious, having full access to the app's capabilities (without having to run the app and run all branches of the tree) and being able to run the app after without any slowdown. Static analysis is easy with android apps as the .apk file they are stored in can be de-compiled into java source code, and the source code can be analysed including libraries and classes.
+The authors Wei Huang, Yao Dong, Ana Milanova and Julian Dolby who have written the paper on this topic referenced below, have presented the systems, DFlow and DroidInfer. The authors have presented this system to demonstrate a method of performing static taint analysis, using a <em>type system</em>.</p>
 <h2>Type Systems</h2>
 <p>A type system in programming is the idea that variables and pieces of data have a type, such as integer, floating point, string, etc. and depending on the type of the data, certain operations and conversions can or cannot take place. For example, it is possible to change an integer into a float, and to multiply a float by an integer, but trying to convert an integer to a string is not possible in a simple way using type conversion (it requires a more substantial algorithm). Type systems are often used to detect bugs in code during compilation where it can check if operations and conversions make sense. The system proposed by the authors of the paper use their system to analyse the source code of the programs in a similar fashion to a compiler.</p>
 <h2>Analysing Taint with a Type System</h2>
